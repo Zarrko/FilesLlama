@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
+      <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
     </ItemGroup>
 
 </Project>
