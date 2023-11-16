@@ -3,9 +3,21 @@ version: '3.9'
 services: 
   redis:
     image: redis:7.0.4-alpine
-    command: redis-server --include /usr/local/etc/redis/redis.conf
+    container_name: redis
+    restart: always
     volumes:
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis_volume_data:/data
+    ports:
+      - "6379:6379"
+  redis_insight:
+    image: redislabs/redisinsight:latest
+    container_name: redis_insight
     restart: always
     ports:
-      - '6379:6389'
+      - "8001:8001"
+    volumes:
+      - redis_insight_volume_data:/db
+
+volumes:
+  redis_volume_data:
+  redis_insight_volume_data:
