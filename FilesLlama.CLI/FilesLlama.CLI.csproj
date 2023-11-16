@@ -8,12 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+      <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
-      <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     </ItemGroup>
 
 </Project>
