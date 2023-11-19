@@ -19,7 +19,5 @@ public static class TaskExtensions
         }
 
         throw allTasks.Exception ?? throw new UnreachableException();
-
-
     }
 }
