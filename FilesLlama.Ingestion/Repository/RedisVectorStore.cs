@@ -1,5 +1,8 @@
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using FilesLlama.Contracts.Embeddings;
 using FilesLlama.Ingestion.Embeddings;
-using NRediSearch;
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
@@ -11,19 +14,19 @@ namespace FilesLlama.Ingestion.Repository;
 
 public class RedisVectorStore : IVectorStore
 {
-    private static int DIM = 1536;
+    private const int Dim = 1536;
     private static int EMBEDDING_SIZE = 8192;
     private static string MD5 = "MD5";
-    private readonly IConnectionMultiplexer _connectionMultiplexer;
     private readonly IEmbeddingsService _embeddingsService;
-    private readonly IDatabase _db;
     private readonly ISearchCommands _ft;
+    private readonly string _index;
+    private readonly IDatabase _db;
 
-    public RedisVectorStore(IConnectionMultiplexer connectionMultiplexer, IEmbeddingsService embeddingsService)
+    public RedisVectorStore(IConnectionMultiplexer connectionMultiplexer, IEmbeddingsService embeddingsService, string index)
     {
-        _connectionMultiplexer = connectionMultiplexer;
         _embeddingsService = embeddingsService;
-        _db = _connectionMultiplexer.GetDatabase();
+        _index = index;
+        _db = connectionMultiplexer.GetDatabase();
         _ft = _db.FT();
     }
 
@@ -51,7 +54,7 @@ public class RedisVectorStore : IVectorStore
         var attributes = new Dictionary<string, object>
         {
             { "TYPE", "FLOAT32" },
-            { "DIM", DIM },
+            { "DIM", Dim },
             { "DISTANCE_METRIC", "L2" },
         };
         var schema = new Schema();
@@ -63,13 +66,55 @@ public class RedisVectorStore : IVectorStore
         _ft.Create(index, parameters, schema);
     }
 
-    public Task AddDocuments(List<string> docs, List<Dictionary<string, string>> meta)
+    public async Task AddDocuments(List<string> docs, List<Dictionary<string, string>> meta)
     {
-        throw new NotImplementedException();
+        CreateIndex(_index);
+        
+        // ToDo: Do we need to handle any exceptions below?
+        var documentList = new List<Document>(docs.Count);
+        for (var i = 0; i < docs.Count; i++)
+        {
+            var vectorList = await _embeddingsService.EmbedDocuments(new List<GetEmbeddingRequest>(1)
+                { new() { Content = docs[i] } });
+            var metadata = meta[i];
+            var vectors = vectorList[0].Embedding;
+            var document = new Document()
+            {
+                Content = docs[i],
+                Meta = metadata,
+                Vector = vectors,
+            };
+            
+            documentList.Add(document);
+        }
+
+        foreach (var document in documentList)
+        {
+            var vectorFloats = document.Vector;
+
+            var contentBytes = Encoding.UTF8.GetBytes(document.Content);
+            using var h = new HMACMD5();
+            var hash = h.ComputeHash(contentBytes);
+            var key = _index + Encoding.Convert(Encoding.UTF8, Encoding.UTF8, hash);
+
+            _db.HashSet(Encoding.UTF8.GetBytes(key), new[]
+            {
+                new HashEntry(Encoding.UTF8.GetBytes("content"), contentBytes),
+                new HashEntry(Encoding.UTF8.GetBytes("metadata"), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(document.Meta))),
+                new HashEntry(Encoding.UTF8.GetBytes("content_vector"), FloatArrayToByteArray(vectorFloats))
+            });
+        }
     }
 
     public Task<List<Document>> SimilaritySearch(string text, int k)
     {
         throw new NotImplementedException();
+    }
+    
+    private static byte[] FloatArrayToByteArray(float[] floatArray)
+    {
+        var byteArray = new byte[floatArray.Length * sizeof(float)];
+        Array.Copy(floatArray, 0, byteArray, 0, byteArray.Length);
+        return byteArray;
     }
 }
