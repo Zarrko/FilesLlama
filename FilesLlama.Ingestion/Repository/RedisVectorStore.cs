@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +9,6 @@ using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
 using StackExchange.Redis;
 using Document = FilesLlama.Contracts.VectorStore.Document;
-using Query = NRediSearch.Query;
 using Schema = NRedisStack.Search.Schema;
 
 namespace FilesLlama.Ingestion.Repository;
@@ -107,9 +107,31 @@ public class RedisVectorStore : IVectorStore
         }
     }
 
-    public Task<List<Document>> SimilaritySearch(string text, int k)
+    public async Task<List<Document>> SimilaritySearch(string text, int k)
     {
-        throw new NotImplementedException();
+        var q = await PrepareQuery(text, k);
+
+        var searchResult = this._ft.Search(_index, q);
+        var docs = searchResult.Documents;
+        if (docs.Count < 1)
+        {
+            return new List<Document>(0);
+        }
+
+        var retrievedDocs = new List<Document>();
+        foreach (var doc in docs)
+        {
+            var retrievedDoc = new Document()
+            {
+                Content = doc["content"].ToString(),
+                Meta = JsonSerializer.Deserialize<Dictionary<string, string>>(doc["meta"])
+                // Add Vectors too?
+            };
+            
+            retrievedDocs.Add(retrievedDoc);
+        }
+
+        return retrievedDocs;
     }
     
     private static byte[] FloatArrayToByteArray(float[] floatArray)
@@ -119,16 +141,16 @@ public class RedisVectorStore : IVectorStore
         return byteArray;
     }
 
-    private async Task<Query> PrepareQuery(string text, int k)
+    private async Task<NRedisStack.Search.Query> PrepareQuery(string text, int k)
     {
         var embedding = await _embeddingsService.EmbedQuery(new GetEmbeddingRequest() { Content = text });
         var vector = FloatArrayToByteArray(embedding.Embedding);
         
-        var queryString = $"*=>[KNN {k} @content_vector ${vector} AS vector_score]";
-        
-        return new Query(queryString)
+        return new NRedisStack.Search.Query("*=>[KNN " + k + " @content_vector $vector AS vector_score]")
+            .Dialect(2)
             .ReturnFields("content", "metadata", "vector_score")
             .SetSortBy("vector_score", false)
-            .SetWithScores();
+            .SetWithScores()
+            .AddParam("vector", vector);
     }
 }
