@@ -8,6 +8,7 @@ using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
 using StackExchange.Redis;
 using Document = FilesLlama.Contracts.VectorStore.Document;
+using Query = NRediSearch.Query;
 using Schema = NRedisStack.Search.Schema;
 
 namespace FilesLlama.Ingestion.Repository;
@@ -116,5 +117,18 @@ public class RedisVectorStore : IVectorStore
         var byteArray = new byte[floatArray.Length * sizeof(float)];
         Array.Copy(floatArray, 0, byteArray, 0, byteArray.Length);
         return byteArray;
+    }
+
+    private async Task<Query> PrepareQuery(string text, int k)
+    {
+        var embedding = await _embeddingsService.EmbedQuery(new GetEmbeddingRequest() { Content = text });
+        var vector = FloatArrayToByteArray(embedding.Embedding);
+        
+        var queryString = $"*=>[KNN {k} @content_vector ${vector} AS vector_score]";
+        
+        return new Query(queryString)
+            .ReturnFields("content", "metadata", "vector_score")
+            .SetSortBy("vector_score", false)
+            .SetWithScores();
     }
 }

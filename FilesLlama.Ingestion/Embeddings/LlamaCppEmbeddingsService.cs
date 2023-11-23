@@ -29,6 +29,11 @@ public class LlamaCppEmbeddingsService : IEmbeddingsService
         return response.ToList();
     }
 
+    public async Task<GetEmbeddingsResponse> EmbedQuery(GetEmbeddingRequest query)
+    {
+        return await GetEmbeddings(query);
+    }
+
     private async Task<GetEmbeddingsResponse> GetEmbeddings(GetEmbeddingRequest document)
     {
         var client = _httpClientFactory.CreateClient(ClientsConstants.LlamaEmbeddings);
