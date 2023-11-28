@@ -13,7 +13,7 @@ public static class ApplicationServiceCollectionExtensions
         {
             client.BaseAddress = new Uri("http://localhost:8080/embedding");
         });
-        serviceCollection.AddSingleton<IConnectionMultiplexer>(_=> ConnectionMultiplexer.Connect("localhost"));
+        serviceCollection.AddSingleton<IConnectionMultiplexer>(_=> ConnectionMultiplexer.Connect("localhost:6379"));
         serviceCollection.AddSingleton<IEmbeddingsService, LlamaCppEmbeddingsService>();
         return serviceCollection;
     }

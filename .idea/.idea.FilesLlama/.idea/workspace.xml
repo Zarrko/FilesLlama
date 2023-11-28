@@ -7,7 +7,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee7a8396-43d8-4144-bbd8-74c732aad8be" name="Changes" comment="" />
+    <list default="true" id="ee7a8396-43d8-4144-bbd8-74c732aad8be" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FilesLlama/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FilesLlama/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.FilesLlama/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FilesLlama/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.CLI/FilesHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.CLI/FilesHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.CLI/FilesLlama.CLI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.CLI/FilesLlama.CLI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.CLI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.CLI/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.CLI/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.CLI/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.Ingestion/ApplicationServiceCollectionExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.Ingestion/ApplicationServiceCollectionExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.Ingestion/Repository/RedisVectorStore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.Ingestion/Repository/RedisVectorStore.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FilesLlama.Ingestion/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/FilesLlama.Ingestion/docker-compose.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,12 +31,19 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/71b07ed95de14904b149f121c755d24742c00/dc/0bb1393c/InfoResult.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1b5d43b1c35a21028bef84d9ed084f2e4da66efd2276822ed9ba86b882fdfc/RedisResult.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2a1ff4b625515d46c3cb5a9526e7299aabedbec8a1287b64fb4c89eda7cc7/Query.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/485da50d43321b81edc28153271bdedb84943a243743e2deaa67a981587968/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5896729be9d8ec5c9cb5a814a7d3f78419bb9cfbecf51d222d2dcf5c28a/IConfigurationSection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5ba1ecc6a2197193ec944ac6db9e4273eb55854fa50448c6c9ebfbe7f12475/ConnectionMultiplexer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5d25dbd69d4397f91d2587ab757bc08011135672bdc0fddbcb3bd1664aa142/Client.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/82f3bb64e8c52af0a0175218c6cd371f393f871ffe1482a2ffd51e7efaeddbb5/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a72ba7f37254fe952548e8ff4bef9545b4bb320bb73ec55cd99227748d9/IConnectionMultiplexer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b8c1c57742337e59591581af3eb2c647e9ed52d2951655fd74b1facf3ff520/ConfigurationExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c2fb787f7154b78aff38cbb3a1b659b9595aeb4863ace420e2cf554b8ed824/IDatabase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d68c6f52e558cad78615d582bf9394d423c1f45de7af1ccf8bc447eb8b4b225/ConfigurationOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/dc74af7eab0a5935f8c6fa46d34a7857d8c68b8617f7a1855a6304a9a289fa/RedisDatabase.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e5e94c672eaad5659d7ee8f0cd9b6ff36516d2b42da7053b82816bea7bc4a/HMACMD5.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e968c3793e68e9f74e49c9befdfe8ead4b307ef5822be08672391c35ca5bbc/RedisValue.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f5beeef3c35498d7f41e9a5ab3e3365a1d56177e5b17be51d4d33a85f68cebb/RedisServer.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -39,40 +56,43 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/zackmwangi/Library/Application Support/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/zackmwangi/Library/Application Support/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
-      &quot;/Users/zackmwangi/.local/share/Symbols/src&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "redis"
+    ],
+    "rider.external.source.directories": [
+      "/Users/zackmwangi/Library/Application Support/JetBrains/Rider2023.2/resharper-host/DecompilerCache",
+      "/Users/zackmwangi/Library/Application Support/JetBrains/Rider2023.2/resharper-host/SourcesCache",
+      "/Users/zackmwangi/.local/share/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="FilesLlama.CLI" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/FilesLlama.CLI/bin/Debug/net7.0/FilesLlama.CLI.dll" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FilesLlama.CLI/bin/Debug/net7.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FilesLlama.CLI/FilesLlama.CLI/FilesLlama.CLI.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FilesLlama.CLI/FilesLlama.CLI.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
+      <option name="PROJECT_KIND" value="StaticMethod" />
+      <option name="PROJECT_TFM" value="net7.0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -90,6 +110,7 @@
       <workItem from="1700037552835" duration="383000" />
       <workItem from="1700037953179" duration="5284000" />
       <workItem from="1700067821641" duration="40615000" />
+      <workItem from="1701103710459" duration="11726000" />
     </task>
     <servers />
   </component>
@@ -109,5 +130,37 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/FilesLlama.CLI/Program.cs</url>
+          <line>34</line>
+          <properties documentPath="$PROJECT_DIR$/FilesLlama.CLI/Program.cs" initialLine="32" containingFunctionPresentation="">
+            <startOffsets>
+              <option value="1074" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1162" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/FilesLlama.Ingestion/Repository/RedisVectorStore.cs</url>
+          <line>35</line>
+          <properties documentPath="$PROJECT_DIR$/FilesLlama.Ingestion/Repository/RedisVectorStore.cs" initialLine="35" containingFunctionPresentation="Method 'IsIndexInVectorStore'">
+            <startOffsets>
+              <option value="1097" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1120" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

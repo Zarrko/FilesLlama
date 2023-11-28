@@ -3,9 +3,9 @@ using System.Text;
 
 namespace FilesLlama.CLI;
 
-public class FilesHelper
+public static class FilesHelper
 {
-    public async Task<IEnumerable<string>> ReadAllBytesAsync(string path, CancellationToken token)
+    public static async Task<IEnumerable<string>> ReadAllBytesAsync(string path, CancellationToken token = default)
     {
         if (!Directory.Exists(path))
         {

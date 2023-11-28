@@ -16,8 +16,6 @@ namespace FilesLlama.Ingestion.Repository;
 public class RedisVectorStore : IVectorStore
 {
     private const int Dim = 1536;
-    private static int EMBEDDING_SIZE = 8192;
-    private static string MD5 = "MD5";
     private readonly IEmbeddingsService _embeddingsService;
     private readonly ISearchCommands _ft;
     private readonly string _index;
@@ -35,12 +33,13 @@ public class RedisVectorStore : IVectorStore
     {
         try
         {
-            var existingIdx = _ft.Info(index);
+            RedisValue idx = index;
+            var existingIdx = _ft.Info(idx);
             return !string.IsNullOrEmpty(existingIdx.IndexName);
         }
         catch (Exception ex)
         {
-            // Log or handle the exception appropriately
+            // Ironically throws an exception if index is not available
             return false;
         }
     }
