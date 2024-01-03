@@ -134,20 +134,6 @@ public class RedisVectorStore : IVectorStore
 
         return retrievedDocs;
     }
-    
-    private static byte[] FloatArrayToByteArray(IReadOnlyCollection<float> floatArray)
-    {
-        var byteArray = new byte[floatArray.Count * sizeof(float)];
-        var offset = 0;
-        foreach (var f in floatArray)
-        {
-            var bytes = BitConverter.GetBytes(f);
-            Array.Copy(bytes, 0, byteArray, offset, bytes.Length);
-            offset += bytes.Length;
-        }
-
-        return byteArray;
-    }
 
     private async Task<NRedisStack.Search.Query> PrepareQuery(string text, int k)
     {

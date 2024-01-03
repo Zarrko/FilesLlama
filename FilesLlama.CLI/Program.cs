@@ -27,6 +27,9 @@ var provider = services.BuildServiceProvider();
 
 var cancellationToken = CancellationToken.None;
 var basePath = AppDomain.CurrentDomain.BaseDirectory;
+
+// ToDo: Add an API here to read from google drive or wikipedia :) And use the additional api details as metadata
+// ToDo: GET: https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=Rabat&explaintext=true
 var path = Path.Combine(basePath, "../../../../Documents");
 
 var files = await FilesHelper.ReadAllBytesAsync(path, cancellationToken);
