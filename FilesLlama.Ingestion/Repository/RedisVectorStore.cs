@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices.JavaScript;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using FilesLlama.Contracts.Embeddings;
@@ -7,6 +5,7 @@ using FilesLlama.Ingestion.Embeddings;
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
+using NRedisStack.Search.Literals.Enums;
 using StackExchange.Redis;
 using Document = FilesLlama.Contracts.VectorStore.Document;
 using Schema = NRedisStack.Search.Schema;
@@ -15,7 +14,7 @@ namespace FilesLlama.Ingestion.Repository;
 
 public class RedisVectorStore : IVectorStore
 {
-    private const int Dim = 1536;
+    private const string VectorPrefix = "files:";
     private readonly IEmbeddingsService _embeddingsService;
     private readonly ISearchCommands _ft;
     private readonly string _index;
@@ -53,16 +52,16 @@ public class RedisVectorStore : IVectorStore
 
         var attributes = new Dictionary<string, object>
         {
-            { "TYPE", "FLOAT32" },
-            { "DIM", Dim },
-            { "DISTANCE_METRIC", "L2" },
+            ["TYPE"] = "FLOAT32",
+            ["DIM"] = "4096", // The size of embedding array from Llama is 4096.
+            ["DISTANCE_METRIC"] = "L2",
         };
         var schema = new Schema();
-        schema.AddTextField("content", 1.0);
-        schema.AddTextField("metadata", 1.0);
+        schema.AddTextField("content");
+        schema.AddTextField("metadata");
         schema.AddVectorField("content_vector", Schema.VectorField.VectorAlgo.FLAT, attributes);
         
-        var parameters = FTCreateParams.CreateParams().AddPrefix(index);
+        var parameters = new FTCreateParams().On(IndexDataType.HASH).Prefix(VectorPrefix);
         _ft.Create(index, parameters, schema);
     }
 
@@ -70,14 +69,17 @@ public class RedisVectorStore : IVectorStore
     {
         CreateIndex(_index);
         
-        // ToDo: Do we need to handle any exceptions below?
+        // ToDo: Prevent adding existing docs. How do we do this?
         var documentList = new List<Document>(docs.Count);
         for (var i = 0; i < docs.Count; i++)
         {
+            // ToDo: EmbeddingService accepts multiples requests. Parallelize.
             var vectorList = await _embeddingsService.EmbedDocuments(new List<GetEmbeddingRequest>(1)
                 { new() { Content = docs[i] } });
-            var metadata = meta[i];
-            var vectors = vectorList[0].Embedding;
+            
+            // ToDo: What should we pass as Metadata for the documents?
+            var metadata = new Dictionary<string, string>(0);
+            var vectors = vectorList[0].Embedding.Select(d => (float)d).ToArray();
             var document = new Document()
             {
                 Content = docs[i],
@@ -88,21 +90,21 @@ public class RedisVectorStore : IVectorStore
             documentList.Add(document);
         }
 
+        var cnt = 0;
         foreach (var document in documentList)
         {
             var vectorFloats = document.Vector;
 
             var contentBytes = Encoding.UTF8.GetBytes(document.Content);
-            using var h = new HMACMD5();
-            var hash = h.ComputeHash(contentBytes);
-            var key = _index + Encoding.Convert(Encoding.UTF8, Encoding.UTF8, hash);
-
-            _db.HashSet(Encoding.UTF8.GetBytes(key), new[]
+            
+            _db.HashSet($"{VectorPrefix}{cnt}", new[]
             {
-                new HashEntry(Encoding.UTF8.GetBytes("content"), contentBytes),
-                new HashEntry(Encoding.UTF8.GetBytes("metadata"), Encoding.UTF8.GetBytes(JsonSerializer.Serialize(document.Meta))),
-                new HashEntry(Encoding.UTF8.GetBytes("content_vector"), FloatArrayToByteArray(vectorFloats))
+                new HashEntry("content", contentBytes),
+                new HashEntry("metadata", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(document.Meta))),
+                new HashEntry("content_vector", vectorFloats.SelectMany(BitConverter.GetBytes).ToArray())
             });
+
+            cnt += 1;
         }
     }
 
@@ -110,7 +112,7 @@ public class RedisVectorStore : IVectorStore
     {
         var q = await PrepareQuery(text, k);
 
-        var searchResult = this._ft.Search(_index, q);
+        var searchResult = _ft.Search(_index, q);
         var docs = searchResult.Documents;
         if (docs.Count < 1)
         {
@@ -123,8 +125,8 @@ public class RedisVectorStore : IVectorStore
             var retrievedDoc = new Document()
             {
                 Content = doc["content"].ToString(),
-                Meta = JsonSerializer.Deserialize<Dictionary<string, string>>(doc["meta"])
-                // Add Vectors too?
+                Meta = JsonSerializer.Deserialize<Dictionary<string, string>>(doc["metadata"])
+                // ToDo: Add Vectors too?
             };
             
             retrievedDocs.Add(retrievedDoc);
@@ -133,23 +135,30 @@ public class RedisVectorStore : IVectorStore
         return retrievedDocs;
     }
     
-    private static byte[] FloatArrayToByteArray(float[] floatArray)
+    private static byte[] FloatArrayToByteArray(IReadOnlyCollection<float> floatArray)
     {
-        var byteArray = new byte[floatArray.Length * sizeof(float)];
-        Array.Copy(floatArray, 0, byteArray, 0, byteArray.Length);
+        var byteArray = new byte[floatArray.Count * sizeof(float)];
+        var offset = 0;
+        foreach (var f in floatArray)
+        {
+            var bytes = BitConverter.GetBytes(f);
+            Array.Copy(bytes, 0, byteArray, offset, bytes.Length);
+            offset += bytes.Length;
+        }
+
         return byteArray;
     }
 
     private async Task<NRedisStack.Search.Query> PrepareQuery(string text, int k)
     {
         var embedding = await _embeddingsService.EmbedQuery(new GetEmbeddingRequest() { Content = text });
-        var vector = FloatArrayToByteArray(embedding.Embedding);
+        var vector = embedding.Embedding.Select(d => (float)d).ToArray();
         
-        return new NRedisStack.Search.Query("*=>[KNN " + k + " @content_vector $vector AS vector_score]")
+        return new NRedisStack.Search.Query($"*=>[KNN {k} @content_vector $query_vector AS vector_score]")
+            .AddParam("query_vector", vector.SelectMany(BitConverter.GetBytes).ToArray())
             .Dialect(2)
             .ReturnFields("content", "metadata", "vector_score")
-            .SetSortBy("vector_score", false)
-            .SetWithScores()
-            .AddParam("vector", vector);
+            .SetSortBy("vector_score")
+            .SetWithScores();
     }
 }

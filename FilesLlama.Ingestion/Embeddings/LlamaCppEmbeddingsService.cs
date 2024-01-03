@@ -51,7 +51,9 @@ public class LlamaCppEmbeddingsService : IEmbeddingsService
 
             if (response.IsSuccessStatusCode)
             {
-                return (await response.Content.ReadFromJsonAsync<GetEmbeddingsResponse>()) ?? defaultGetEmbeddingResponse;
+                var embeddingResponse = (await response.Content.ReadFromJsonAsync<GetEmbeddingsResponse>()) ??
+                                        defaultGetEmbeddingResponse;
+                return embeddingResponse;
             }
 
             return defaultGetEmbeddingResponse;

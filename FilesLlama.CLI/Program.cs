@@ -33,3 +33,9 @@ var files = await FilesHelper.ReadAllBytesAsync(path, cancellationToken);
 
 var vectorStore = provider.GetRequiredService<IVectorStore>();
 await vectorStore.AddDocuments(files.ToList(), new List<Dictionary<string, string>>(0));
+
+var searchResults = await vectorStore.SimilaritySearch("capital", 2);
+foreach (var result in searchResults)
+{
+    Console.WriteLine(result.Content);
+}
