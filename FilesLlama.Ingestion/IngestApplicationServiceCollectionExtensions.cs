@@ -5,9 +5,9 @@ using StackExchange.Redis;
 
 namespace FilesLlama.Ingestion;
 
-public static class ApplicationServiceCollectionExtensions
+public static class IngestApplicationServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplication(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddIngestApplication(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddHttpClient(IngestClientsConstants.LlamaEmbeddings,client =>
         {

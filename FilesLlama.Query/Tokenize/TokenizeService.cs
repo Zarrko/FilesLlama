@@ -14,6 +14,7 @@ public class TokenizeService : ITokenizeService
         _httpClientFactory = httpClientFactory;
     }
 
+    // ToDo: Add a PreProcessing stage before this?
     public async Task<GetTokensResponse> Tokenize(GetTokensRequest tokens)
     {
         using var client = _httpClientFactory.CreateClient(QueryClientsConstants.Tokenize);

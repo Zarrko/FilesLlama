@@ -15,7 +15,7 @@ var config = configuration.Build();
 var indexName = config.GetSection("IndexName").Value;
 ArgumentException.ThrowIfNullOrEmpty(indexName);
 
-services.AddApplication();
+services.AddIngestApplication();
 
 services.AddSingleton<IVectorStore>(s => new RedisVectorStore(
     s.GetRequiredService<IConnectionMultiplexer>(),
@@ -32,6 +32,8 @@ var basePath = AppDomain.CurrentDomain.BaseDirectory;
 // ToDo: GET: https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=Rabat&explaintext=true
 var path = Path.Combine(basePath, "../../../../Documents");
 
+// ToDo: Abstract files reader + add to vector store in one IIngestService
+// ToDo: Postprocessing after retrieval from vector store based on different strategies.
 var files = await FilesHelper.ReadAllBytesAsync(path, cancellationToken);
 
 var vectorStore = provider.GetRequiredService<IVectorStore>();
@@ -44,5 +46,3 @@ foreach (var result in searchResults)
 {
     Console.WriteLine(result.Content);
 }
-
-// ToDo: Postprocessing after retrieval from vector store
