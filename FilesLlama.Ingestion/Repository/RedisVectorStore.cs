@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using FilesLlama.Contracts.Embeddings;
+using FilesLlama.Contracts.VectorStore;
 using FilesLlama.Ingestion.Embeddings;
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
@@ -53,7 +54,7 @@ public class RedisVectorStore : IVectorStore
         var attributes = new Dictionary<string, object>
         {
             ["TYPE"] = "FLOAT32",
-            ["DIM"] = "4096", // The size of embedding array from Llama is 4096.
+            ["DIM"] = "4096", // The size of embedding array from Llama.cpp is 4096.
             ["DISTANCE_METRIC"] = "L2",
         };
         var schema = new Schema();
@@ -69,7 +70,7 @@ public class RedisVectorStore : IVectorStore
     {
         CreateIndex(_index);
         
-        // ToDo: Prevent adding existing docs. How do we do this?
+        // ToDo: Prevent adding existing docs. How do we do this? (Or update instead of adding?)
         var documentList = new List<Document>(docs.Count);
         for (var i = 0; i < docs.Count; i++)
         {
@@ -108,7 +109,7 @@ public class RedisVectorStore : IVectorStore
         }
     }
 
-    public async Task<List<Document>> SimilaritySearch(string text, int k)
+    public async Task<List<VectorStoreResponse>> SimilaritySearch(string text, int k)
     {
         var q = await PrepareQuery(text, k);
 
@@ -116,17 +117,17 @@ public class RedisVectorStore : IVectorStore
         var docs = searchResult.Documents;
         if (docs.Count < 1)
         {
-            return new List<Document>(0);
+            return new List<VectorStoreResponse>(0);
         }
 
-        var retrievedDocs = new List<Document>();
+        var retrievedDocs = new List<VectorStoreResponse>();
         foreach (var doc in docs)
         {
-            var retrievedDoc = new Document()
+            var retrievedDoc = new VectorStoreResponse()
             {
                 Content = doc["content"].ToString(),
-                Meta = JsonSerializer.Deserialize<Dictionary<string, string>>(doc["metadata"])
-                // ToDo: Add Vectors too?
+                Meta = JsonSerializer.Deserialize<Dictionary<string, string>>(doc["metadata"]),
+                VectorScore = (double)doc["vector_score"]
             };
             
             retrievedDocs.Add(retrievedDoc);

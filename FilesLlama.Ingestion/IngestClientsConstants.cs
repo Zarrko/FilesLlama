@@ -1,6 +1,6 @@
 namespace FilesLlama.Ingestion;
 
-public static class ClientsConstants
+public static class IngestClientsConstants
 {
     public const string LlamaEmbeddings = "LlamaEmbeddings";
 }

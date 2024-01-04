@@ -37,8 +37,12 @@ var files = await FilesHelper.ReadAllBytesAsync(path, cancellationToken);
 var vectorStore = provider.GetRequiredService<IVectorStore>();
 await vectorStore.AddDocuments(files.ToList(), new List<Dictionary<string, string>>(0));
 
-var searchResults = await vectorStore.SimilaritySearch("capital", 2);
+var searchResults = await vectorStore.SimilaritySearch("capital city of Kenya", 2);
+
+// Print most similar documents first.[SortBy Vector_Score i.e., L2/Euclidean distance, lower is better]
 foreach (var result in searchResults)
 {
     Console.WriteLine(result.Content);
 }
+
+// ToDo: Postprocessing after retrieval from vector store

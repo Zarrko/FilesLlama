@@ -9,7 +9,7 @@ public static class ApplicationServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection serviceCollection)
     {
-        serviceCollection.AddHttpClient(ClientsConstants.LlamaEmbeddings,client =>
+        serviceCollection.AddHttpClient(IngestClientsConstants.LlamaEmbeddings,client =>
         {
             client.BaseAddress = new Uri("http://localhost:8080/embedding");
         });

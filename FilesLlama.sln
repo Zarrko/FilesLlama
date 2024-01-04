@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesLlama.CLI", "FilesLlam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesLlama.Contracts", "FilesLlama.Contracts\FilesLlama.Contracts.csproj", "{C49E68EE-67D8-40C9-968D-BA89A92542A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilesLlama.Query", "FilesLlama.Query\FilesLlama.Query.csproj", "{5177399B-EF7E-4F6C-8C81-A22885FEEF72}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{C49E68EE-67D8-40C9-968D-BA89A92542A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C49E68EE-67D8-40C9-968D-BA89A92542A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C49E68EE-67D8-40C9-968D-BA89A92542A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5177399B-EF7E-4F6C-8C81-A22885FEEF72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5177399B-EF7E-4F6C-8C81-A22885FEEF72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5177399B-EF7E-4F6C-8C81-A22885FEEF72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5177399B-EF7E-4F6C-8C81-A22885FEEF72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

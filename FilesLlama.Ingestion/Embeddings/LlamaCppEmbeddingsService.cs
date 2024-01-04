@@ -36,7 +36,7 @@ public class LlamaCppEmbeddingsService : IEmbeddingsService
 
     private async Task<GetEmbeddingsResponse> GetEmbeddings(GetEmbeddingRequest document)
     {
-        var client = _httpClientFactory.CreateClient(ClientsConstants.LlamaEmbeddings);
+        using var client = _httpClientFactory.CreateClient(IngestClientsConstants.LlamaEmbeddings);
         var jsonRequest = JsonSerializer.Serialize(document);
         
         using var httpRequestMessage = new HttpRequestMessage();
