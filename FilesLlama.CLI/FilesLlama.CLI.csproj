@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
+      <ProjectReference Include="..\FilesLlama.Query\FilesLlama.Query.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -13,7 +13,7 @@ using Schema = NRedisStack.Search.Schema;
 
 namespace FilesLlama.Ingestion.Repository;
 
-public class RedisVectorStore : IVectorStore
+public class RedisVectorIngestStore : IVectorIngestStore
 {
     private const string VectorPrefix = "files:";
     private readonly IEmbeddingsService _embeddingsService;
@@ -21,7 +21,7 @@ public class RedisVectorStore : IVectorStore
     private readonly string _index;
     private readonly IDatabase _db;
 
-    public RedisVectorStore(IConnectionMultiplexer connectionMultiplexer, IEmbeddingsService embeddingsService, string index)
+    public RedisVectorIngestStore(IConnectionMultiplexer connectionMultiplexer, IEmbeddingsService embeddingsService, string index)
     {
         _embeddingsService = embeddingsService;
         _index = index;

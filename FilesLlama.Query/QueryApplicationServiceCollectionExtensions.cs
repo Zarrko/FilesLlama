@@ -27,6 +27,7 @@ public static class QueryApplicationServiceCollectionExtensions
         serviceCollection.AddSingleton<ITokenizeService, TokenizeService>();
         serviceCollection.AddSingleton<ICompletionService, CompletionService>();
         serviceCollection.AddSingleton<IQueryEmbeddingsService, LlamaCppQueryEmbeddingsService>();
+        serviceCollection.AddSingleton<IQueryEngine, QueryEngine>();
 
         return serviceCollection;
     }

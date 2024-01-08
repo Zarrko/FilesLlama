@@ -14,6 +14,7 @@ public static class IngestApplicationServiceCollectionExtensions
         });
         serviceCollection.AddSingleton<IConnectionMultiplexer>(_=> ConnectionMultiplexer.Connect("localhost:6379"));
         serviceCollection.AddSingleton<IEmbeddingsService, LlamaCppEmbeddingsService>();
+        serviceCollection.AddSingleton<IIngestService, IngestService>();
         return serviceCollection;
     }
 }

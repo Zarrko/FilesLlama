@@ -2,7 +2,7 @@ using FilesLlama.Contracts.VectorStore;
 
 namespace FilesLlama.Ingestion.Repository;
 
-public interface IVectorStore
+public interface IVectorIngestStore
 {
     Task AddDocuments(List<string> docs, List<Dictionary<string, string>> meta);
 
