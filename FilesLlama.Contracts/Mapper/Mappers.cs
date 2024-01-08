@@ -1,3 +1,4 @@
+using FilesLlama.Contracts.Completion;
 using FilesLlama.Contracts.Tokens;
 using FilesLlama.Contracts.VectorStore;
 
@@ -5,7 +6,7 @@ namespace FilesLlama.Contracts.Mapper;
 
 public static class Mappers
 {
-    public static GetTokensRequest MapVectorStoreResponseToGetTokenizerRequest(this List<VectorStoreResponse> vectorStoreResponses, string userQuestion)
+    public static GetTokensRequest MapVectorStoreResponseToGetTokensRequest(this List<VectorStoreResponse> vectorStoreResponses, string userQuestion)
     {
         var content = string.Empty;
         foreach (var vectorStoreResponse in vectorStoreResponses)
@@ -17,6 +18,14 @@ public static class Mappers
         return new GetTokensRequest()
         {
             Content = content
+        };
+    }
+
+    public static GetCompletionRequest MapTokensResponseToGetCompletionRequest(this GetTokensResponse tokensResponse)
+    {
+        return new GetCompletionRequest
+        {
+            Tokens = tokensResponse.Tokens
         };
     }
 }
