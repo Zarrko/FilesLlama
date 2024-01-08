@@ -1,5 +1,4 @@
 using FilesLlama.Ingestion.Embeddings;
-using FilesLlama.Ingestion.Repository;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 

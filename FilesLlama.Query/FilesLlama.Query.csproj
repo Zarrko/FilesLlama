@@ -8,12 +8,14 @@
 
     <ItemGroup>
       <ProjectReference Include="..\FilesLlama.Contracts\FilesLlama.Contracts.csproj" />
-      <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
       <PackageReference Include="StackExchange.Redis" Version="2.7.4" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+      <PackageReference Include="NRediSearch" Version="2.2.79" />
+      <PackageReference Include="NRedisStack" Version="0.10.1" />
     </ItemGroup>
 
 </Project>

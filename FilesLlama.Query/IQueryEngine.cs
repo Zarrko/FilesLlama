@@ -2,6 +2,6 @@ namespace FilesLlama.Query;
 
 public interface IQueryEngine
 {
-    // ToDo: Query shouldn't have a dependency on ingestion. Refactor to make them separate concerns.
+// ToDo: Refactor so as to use common interfaces between Query and Ingest
     Task<string> Query(string userQuery, int k = 2);
 }
