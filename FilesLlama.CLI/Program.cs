@@ -44,7 +44,7 @@ await ingestService.Ingest(filesPath: "../../../../Documents", cancellationToken
 
 // Query:
 var queryEngine = provider.GetRequiredService<IQueryEngine>();
-var queryResults = await queryEngine.Query(userQuery: "capital city of Kenya");
+var queryResults = await queryEngine.Query(userQuery: "What is Nairobi?", k: 1);
 Console.WriteLine(queryResults);
 
 // ToDo: Add an API here to read from google drive or wikipedia :) And use the additional api details as metadata

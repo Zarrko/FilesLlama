@@ -14,10 +14,14 @@ public static class Mappers
             content += $"{vectorStoreResponse.Content} ";
         }
 
-        content += userQuestion;
+        var promptTemplate = $"Context information is below.\n" +
+                             $"---------------------\n{content}\n---------------------\n" +
+                             $"Given the context information and not prior knowledge, answer the query." +
+                             $"\nQuery: {userQuestion}" +
+                             $"\nAnswer: \\";
         return new GetTokensRequest()
         {
-            Content = content
+            Content = promptTemplate
         };
     }
 

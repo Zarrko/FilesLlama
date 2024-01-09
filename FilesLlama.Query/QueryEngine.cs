@@ -22,7 +22,12 @@ public class QueryEngine : IQueryEngine
     public async Task<string> Query(string userQuery, int k = 2)
     {
         var similarDocuments = await _queryVectorStore.SimilaritySearch(userQuery, k);
-
+        if (similarDocuments.Count < 1)
+        {
+            // ToDo: Throw an exception maybe?
+            return string.Empty;
+        }
+        
         var tokensRequest = similarDocuments.MapVectorStoreResponseToGetTokensRequest(userQuery);
         var tokens = await _tokenizeService.Tokenize(tokensRequest);
 
