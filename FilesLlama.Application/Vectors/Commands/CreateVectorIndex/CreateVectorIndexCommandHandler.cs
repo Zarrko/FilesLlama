@@ -13,8 +13,8 @@ public class CreateVectorIndexCommandHandler : IRequestHandler<CreateVectorIndex
         _vectorStore = vectorStore;
     }
 
-    public async Task<ErrorOr<bool>> Handle(CreateVectorIndexCommand request, CancellationToken cancellationToken)
+    public Task<ErrorOr<bool>> Handle(CreateVectorIndexCommand request, CancellationToken cancellationToken)
     {
-        return await _vectorStore.AddDocuments(request.Index, request.Documents, request.DocumentsMetadata);
+        return _vectorStore.AddDocuments(request.Index, request.Documents, request.DocumentsMetadata);
     }
 }

@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Vectors\Queries\" />
+      <ProjectReference Include="..\FilesLlama.Domain\FilesLlama.Domain.csproj" />
     </ItemGroup>
 
 </Project>
