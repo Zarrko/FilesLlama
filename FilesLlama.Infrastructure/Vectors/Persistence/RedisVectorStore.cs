@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using ErrorOr;
 using FilesLlama.Application.Common.Interfaces;
@@ -13,9 +14,9 @@ namespace FilesLlama.Infrastructure.Vectors.Persistence;
 public class RedisVectorStore : IVectorStore
 {
     private const string VectorPrefix = "files:";
-    private IEmbeddingsGenerator _embeddingsGenerator;
-    private IDatabase _db;
-    private ISearchCommandsAsync _search;
+    private readonly IEmbeddingsGenerator _embeddingsGenerator;
+    private readonly IDatabase _db;
+    private readonly ISearchCommandsAsync _search;
 
     public RedisVectorStore(IEmbeddingsGenerator embeddingsGenerator, IConnectionMultiplexer connectionMultiplexer)
     {
@@ -24,9 +25,49 @@ public class RedisVectorStore : IVectorStore
         _search = _db.FT();
     }
 
-    public Task<ErrorOr<bool>> AddDocuments(string index, List<string> documents, List<KeyValuePair<string, string>> documentsMetadata)
+    public async Task<ErrorOr<Created>> AddDocuments(string index, List<string> documents, List<KeyValuePair<string, string>> documentsMetadata)
     {
-        throw new NotImplementedException();
+        var errorsOrIndexCreated = await CreateIndex(index);
+        if (errorsOrIndexCreated.IsError)
+        {
+            return Error.Failure(description: errorsOrIndexCreated.FirstError.Description);
+        }
+
+        var errorsOrEmbeddings = await _embeddingsGenerator.EmbedContentObjects(documents);
+        var embeddingErrorsDescriptions = string.Empty;
+
+        var errorsOrEmbeddingsArray = errorsOrEmbeddings as ErrorOr<double[]>[] ?? errorsOrEmbeddings.ToArray();
+        for (var cnt = 0; cnt < errorsOrEmbeddingsArray.Length; cnt++)
+        {
+            var errorsOrEmbedding = errorsOrEmbeddingsArray[cnt];
+            if (errorsOrEmbedding.IsError)
+            {
+                embeddingErrorsDescriptions += $"Document-{cnt}-{errorsOrEmbedding.FirstError.Description}.";
+            }
+        }
+
+        if (embeddingErrorsDescriptions != string.Empty)
+        {
+            return Error.Failure(description: embeddingErrorsDescriptions);
+        }
+        
+        var i = 0;
+        foreach (var embedding in errorsOrEmbeddingsArray)
+        {
+            var vector = embedding.Value.Select(d => (float)d).ToArray();
+            var contentBytes = Encoding.UTF8.GetBytes(documents[i]);
+            var metadata = new Dictionary<string, string>(0);
+            
+            _db.HashSet($"{VectorPrefix}{i}", new[]
+            {
+                new HashEntry("content", contentBytes),
+                new HashEntry("metadata", Encoding.UTF8.GetBytes(JsonSerializer.Serialize(metadata))),
+                new HashEntry("content_vector", vector.SelectMany(BitConverter.GetBytes).ToArray())
+            });
+            i += 1;
+        }
+
+        return Result.Created;
     }
 
     public async Task<ErrorOr<List<VectorIndex>>> SearchSimilarDocuments(string index, string userQuery, int k)

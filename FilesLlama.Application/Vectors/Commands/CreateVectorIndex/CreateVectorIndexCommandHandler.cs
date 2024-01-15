@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FilesLlama.Application.Vectors.Commands.CreateVectorIndex;
 
-public class CreateVectorIndexCommandHandler : IRequestHandler<CreateVectorIndexCommand, ErrorOr<bool>>
+public class CreateVectorIndexCommandHandler : IRequestHandler<CreateVectorIndexCommand, ErrorOr<Created>>
 {
     private readonly IVectorStore _vectorStore;
 
@@ -13,7 +13,7 @@ public class CreateVectorIndexCommandHandler : IRequestHandler<CreateVectorIndex
         _vectorStore = vectorStore;
     }
 
-    public Task<ErrorOr<bool>> Handle(CreateVectorIndexCommand request, CancellationToken cancellationToken)
+    public Task<ErrorOr<Created>> Handle(CreateVectorIndexCommand request, CancellationToken cancellationToken)
     {
         return _vectorStore.AddDocuments(request.Index, request.Documents, request.DocumentsMetadata);
     }
