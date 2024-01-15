@@ -10,4 +10,9 @@
       <ProjectReference Include="..\FilesLlama.Application\FilesLlama.Application.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="NRedisStack" Version="0.11.0" />
+      <PackageReference Include="StackExchange.Redis" Version="2.7.10" />
+    </ItemGroup>
+
 </Project>

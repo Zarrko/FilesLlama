@@ -5,7 +5,7 @@ using MediatR;
 
 namespace FilesLlama.Application.Vectors.Queries.ReadVectorIndex;
 
-public class ReadVectorIndexCommandHandler : IRequestHandler<ReadVectorIndexCommand, ErrorOr<VectorIndex>>
+public class ReadVectorIndexCommandHandler : IRequestHandler<ReadVectorIndexCommand, ErrorOr<List<VectorIndex>>>
 {
     private readonly IVectorStore _vectorStore;
 
@@ -14,7 +14,7 @@ public class ReadVectorIndexCommandHandler : IRequestHandler<ReadVectorIndexComm
         _vectorStore = vectorStore;
     }
 
-    public Task<ErrorOr<VectorIndex>> Handle(ReadVectorIndexCommand request, CancellationToken cancellationToken)
+    public Task<ErrorOr<List<VectorIndex>>> Handle(ReadVectorIndexCommand request, CancellationToken cancellationToken)
     {
         return _vectorStore.SearchSimilarDocuments(request.Index, request.UserQuery, request.K);
     }
