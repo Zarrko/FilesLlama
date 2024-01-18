@@ -1,5 +1,5 @@
 using ErrorOr;
-using FilesLlama.Application.Common.ApiRequestObjects;
+using FilesLlama.Application.Common.ApiRequestResponseObjects.Llm;
 
 namespace FilesLlama.Application.Common.Interfaces;
 

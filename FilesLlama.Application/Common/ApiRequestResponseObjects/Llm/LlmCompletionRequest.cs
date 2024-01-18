@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace FilesLlama.Application.Common.ApiRequestObjects;
+namespace FilesLlama.Application.Common.ApiRequestResponseObjects.Llm;
 
 public class LlmCompletionRequest
 {

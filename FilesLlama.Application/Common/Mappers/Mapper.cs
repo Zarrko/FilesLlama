@@ -1,4 +1,4 @@
-using FilesLlama.Application.Common.ApiRequestObjects;
+using FilesLlama.Application.Common.ApiRequestResponseObjects.Llm;
 using FilesLlama.Domain.Llm;
 
 namespace FilesLlama.Application.Common.Mappers;
