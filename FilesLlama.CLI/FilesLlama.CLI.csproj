@@ -8,6 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FilesLlama.Application\FilesLlama.Application.csproj" />
+      <ProjectReference Include="..\FilesLlama.Contractsv2\FilesLlama.Contractsv2.csproj" />
+      <ProjectReference Include="..\FilesLlama.Infrastructure\FilesLlama.Infrastructure.csproj" />
       <ProjectReference Include="..\FilesLlama.Ingestion\FilesLlama.Ingestion.csproj" />
       <ProjectReference Include="..\FilesLlama.Query\FilesLlama.Query.csproj" />
     </ItemGroup>

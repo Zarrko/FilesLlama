@@ -1,12 +1,11 @@
-﻿using FilesLlama.Ingestion;
-using FilesLlama.Ingestion.Embeddings;
-using FilesLlama.Ingestion.Repository;
-using FilesLlama.Query;
-using FilesLlama.Query.Embeddings;
-using FilesLlama.Query.Repository;
+﻿using FilesLlama.Application;
+using FilesLlama.Application.Vectors.Commands.CreateVectorIndex;
+using FilesLlama.Application.Vectors.Queries.ReadVectorIndex;
+using FilesLlama.CLI;
+using FilesLlama.Infrastructure;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 var services = new ServiceCollection();
 
@@ -17,35 +16,29 @@ var config = configuration.Build();
 var indexName = config.GetSection("IndexName").Value;
 ArgumentException.ThrowIfNullOrEmpty(indexName);
 
-services.AddIngestApplication();
-services.AddQueryApplication();
-
-// ToDo: Move this to AddIngestApplication()
-services.AddSingleton<IVectorIngestStore>(s => new RedisVectorIngestStore(
-    s.GetRequiredService<IConnectionMultiplexer>(),
-    s.GetRequiredService<IEmbeddingsService>(),
-    indexName
-));
-
-// ToDo: Move this to AddQueryApplication() 
-services.AddSingleton<IQueryVectorStore>(s => new RedisQueryVectorStore(
-    s.GetRequiredService<IConnectionMultiplexer>(),
-    s.GetRequiredService<IQueryEmbeddingsService>(),
-    indexName
-));
+services
+    .AddApplication()
+    .AddInfrastructure();
 
 var provider = services.BuildServiceProvider();
-
 var cancellationToken = CancellationToken.None;
 
+var mediatr = provider.GetRequiredService<ISender>();
+
 // Ingestion: 
-var ingestService = provider.GetRequiredService<IIngestService>();
-await ingestService.Ingest(filesPath: "../../../../Documents", cancellationToken);
+var files = await FilesHelper.ReadAllBytesAsync(path: "../../../../Documents");
+var ingestCommand = new CreateVectorIndexCommand(Index: indexName, Documents: files.ToList(),
+    DocumentsMetadata: new List<KeyValuePair<string, string>>(0));
+await mediatr.Send(ingestCommand);
 
 // Query:
-var queryEngine = provider.GetRequiredService<IQueryEngine>();
-var queryResults = await queryEngine.Query(userQuery: "What is Nairobi?", k: 1);
-Console.WriteLine(queryResults);
-
-// ToDo: Add an API here to read from google drive or wikipedia :) And use the additional api details as metadata
-// ToDo: GET: https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=Rabat&explaintext=true
+var queryCommand = new ReadVectorIndexCommand(Index: indexName, UserQuery: "What is Nairobi?", K: 1);
+var queryResults = await mediatr.Send(queryCommand);
+if (queryResults.IsError)
+{
+    Console.WriteLine(queryResults.FirstError.Description);
+}
+else
+{
+    Console.WriteLine(queryResults);
+}
