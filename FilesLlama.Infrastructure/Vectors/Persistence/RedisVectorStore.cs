@@ -82,7 +82,7 @@ public class RedisVectorStore : IVectorStore
         var docs = searchResult.Documents;
         if (docs.Count < 1)
         {
-            return new List<VectorIndex>(0);
+            return Error.NotFound(description: "No documents found that match the query");
         }
 
         var retrievedDocs = new List<VectorIndex>();
