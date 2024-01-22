@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using ErrorOr;
-using FilesLlama.Application.Common.ApiRequestResponseObjects.Llm;
+using FilesLlama.Application.Common.ApiRequestResponseObjects.Tokens;
 using FilesLlama.Application.Common.Interfaces;
 
 namespace FilesLlama.Infrastructure.Tokens;
@@ -19,7 +19,7 @@ public class TokensGenerator : ITokensGenerator
     public async Task<ErrorOr<int[]>> GenerateTokens(string content)
     {
         using var client = _httpClientFactory.CreateClient(HttpClientsConstants.LlamaCpp);
-        var jsonRequest = JsonSerializer.Serialize(content);
+        var jsonRequest = JsonSerializer.Serialize(new TokensRequest { Content = content});
         
         using var httpRequestMessage = new HttpRequestMessage();
         httpRequestMessage.Method = HttpMethod.Post;
@@ -33,12 +33,13 @@ public class TokensGenerator : ITokensGenerator
             {
                 return Error.Failure(description: $"Unable to fetch tokens: {response.StatusCode.ToString()}");
             }
-            var tokensResponse = await response.Content.ReadFromJsonAsync<int[]>();
-            if (tokensResponse == null || tokensResponse.Length < 1)
+            var tokensResponse = await response.Content.ReadFromJsonAsync<TokensResponse>();
+            if (tokensResponse is not { Tokens: not null and not { Length: < 1 } })
             { 
                 return Error.Unexpected(description: "No tokens generated or unable to read generated tokens.");
             }
-            return tokensResponse;
+
+            return tokensResponse.Tokens;
         }
         catch (Exception ex)
         {

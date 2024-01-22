@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using ErrorOr;
@@ -32,7 +33,7 @@ public class RedisVectorStore : IVectorStore
         {
             return Error.Failure(description: errorsOrIndexCreated.FirstError.Description);
         }
-
+        
         var errorsOrEmbeddings = await _embeddingsGenerator.EmbedContentObjects(documents);
         var embeddingErrorsDescriptions = string.Empty;
 

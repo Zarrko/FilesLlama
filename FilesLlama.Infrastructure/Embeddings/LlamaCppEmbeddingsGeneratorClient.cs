@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using ErrorOr;
+using FilesLlama.Application.Common.ApiRequestResponseObjects.Embeddings;
 using FilesLlama.Application.Common.Interfaces;
 
 namespace FilesLlama.Infrastructure.Embeddings;
@@ -17,19 +18,23 @@ public class LlamaCppEmbeddingsGeneratorClient : IEmbeddingsGenerator
 
     public async Task<IEnumerable<ErrorOr<double[]>>> EmbedContentObjects(List<string> contentObjects)
     {
+        // Alternatively implement sequential execution of async operations if server is struggling with the requests.
         var contentObjectsTasks = new List<Task<ErrorOr<double[]>>>(contentObjects.Count);
         foreach (var content in contentObjects)
         {
             contentObjectsTasks.Add(GetEmbeddings(content));
+        
+            await Task.Delay(TimeSpan.FromMilliseconds(15000));
         }
         
         return await TaskExtensions.WhenAll(contentObjectsTasks);
+        
     }
     
     private async Task<ErrorOr<double[]>> GetEmbeddings(string content)
     {
         using var client = _httpClientFactory.CreateClient(HttpClientsConstants.LlamaCpp);
-        var jsonRequest = JsonSerializer.Serialize(content);
+        var jsonRequest = JsonSerializer.Serialize(new EmbeddingRequest { Content = content});
 
         using var httpRequestMessage = new HttpRequestMessage();
         httpRequestMessage.Method = HttpMethod.Post;
@@ -43,12 +48,12 @@ public class LlamaCppEmbeddingsGeneratorClient : IEmbeddingsGenerator
             {
                 return Error.Failure(description: $"Unable to fetch embeddings {response.StatusCode.ToString()}");
             }
-            var embeddingResponse = await response.Content.ReadFromJsonAsync<double[]>();
-            if (embeddingResponse == null)
+            var embeddingResponse = await response.Content.ReadFromJsonAsync<EmbeddingResponse>();
+            if (embeddingResponse == null || embeddingResponse.Embedding == null)
             { 
                 return Error.Unexpected(description: "No embeddings generated or unable to read generated embeddings.");
             }
-            return embeddingResponse;
+            return embeddingResponse.Embedding;
         }
         catch (Exception ex)
         {
