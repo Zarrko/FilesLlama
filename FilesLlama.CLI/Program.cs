@@ -40,5 +40,5 @@ if (queryResults.IsError)
 }
 else
 {
-    Console.WriteLine(queryResults);
+    Console.WriteLine(queryResults.Value);
 }

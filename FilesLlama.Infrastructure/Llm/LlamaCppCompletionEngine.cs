@@ -18,7 +18,7 @@ public class LlamaCppCompletionEngine : ICompletionEngine
     
     public async Task<ErrorOr<string>> CompleteQuery(LlmCompletionRequest llmCompletionRequest)
     {
-        using var client = _httpClientFactory.CreateClient(HttpClientsConstants.LlamaCppCompletion);
+        using var client = _httpClientFactory.CreateClient(HttpClientsConstants.LlamaCpp);
         var jsonRequest = JsonSerializer.Serialize(llmCompletionRequest);
         
         using var httpRequestMessage = new HttpRequestMessage();
